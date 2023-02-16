@@ -24,6 +24,12 @@ Object name: 'Collection'.
    at Azure.Monitor.OpenTelemetry.Exporter.AzureMonitorLogExporter.Export(Batch`1& batch)]
    ```
    
+The log message produced by the following code is not sent to azure monitor.
+```csharp
+logger.LogInformation("Sample log message");
+```
+ 
+   
    ## Change log level of Microsoft.AspNetCore
    
-   In the `appsettings.json` file, change the log level of Microsoft.AspNetCore to `warning` and run again the project. This time there is no error.
+   In the `appsettings.json` file, change the log level of Microsoft.AspNetCore to `warning` and run again the project. This time there is no error and the log is sent to azure monitor.
