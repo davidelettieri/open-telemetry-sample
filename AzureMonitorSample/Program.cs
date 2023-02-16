@@ -5,21 +5,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
 
-Action<ResourceBuilder> configureResource = r => r.AddService(
-    serviceName: "Sample",
-    serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString() ?? "unknown",
-    serviceInstanceId: Environment.MachineName);
-
-
 builder.Logging.ClearProviders();
 
 // Configure OpenTelemetry Logging.
 builder.Logging.AddOpenTelemetry(options =>
 {
-    var resourceBuilder = ResourceBuilder.CreateDefault();
-    configureResource(resourceBuilder);
-    options.IncludeFormattedMessage = true;
-    options.IncludeScopes = true;
+    var resourceBuilder = 
+        ResourceBuilder
+        .CreateDefault()
+        .AddService(
+            serviceName: "Sample",
+            serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString() ?? "unknown",
+            serviceInstanceId: Environment.MachineName);
+
     options.SetResourceBuilder(resourceBuilder);
     options.AddAzureMonitorLogExporter(options => options.ConnectionString = connectionString);
 });
